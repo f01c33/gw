@@ -1,4 +1,4 @@
-# GW (Go Watcher)
+# GW (Go Watcher) [![Go](https://github.com/f01c33/gw/actions/workflows/go.yml/badge.svg)](https://github.com/f01c33/gw/actions/workflows/go.yml)
 
 ## Stacks
 
