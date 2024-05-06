@@ -99,12 +99,6 @@ func main() {
 				}
 				log.Printf("%+v", event)
 
-				err := sh.Proc.Process.Signal(syscall.SIGTERM)
-				if err != nil {
-					log.Println(err)
-					wg.Done()
-					return
-				}
 				sh.Close()
 				sh, err = NewShell("/bin/bash")
 				if err != nil {
