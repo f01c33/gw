@@ -48,16 +48,10 @@ Listening to port 4000
 
 ## How to install
 
-### Homebrew
-
-```shell
-$ brew install mattdamon108/tools/gw
-```
-
 ### Using `go get`
 
 ```shell
-$ go get -u github.com/mattdamon108/gw
+$ go install github.com/f01c33/gw@latest
 ```
 
 ### Build with the source code
@@ -65,7 +59,7 @@ $ go get -u github.com/mattdamon108/gw
 1. Git clone
 
 ```shell
-$ git clone https://github.com/mattdamon108/gw.git
+$ git clone https://github.com/f01c33/gw.git
 ```
 
 2. Build & Install
