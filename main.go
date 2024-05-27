@@ -28,7 +28,10 @@ func main() {
 	}
 	defer watcher.Close()
 
-	watcher.Add(".")
+	err = watcher.Add(".")
+	if err != nil {
+		panic(err)
+	}
 
 	gign, err := os.ReadFile(".gitignore")
 	ignored := []string{"node_modules"}
@@ -68,9 +71,17 @@ func main() {
 	}
 
 	go func() {
-		io.Copy(os.Stdout, sh.Stdout)
+		_, err := io.Copy(os.Stdout, sh.Stdout)
+		if err != nil {
+			fmt.Fprintln(os.Stderr, err)
+		}
 	}()
-	go func() { io.Copy(os.Stderr, sh.Stderr) }()
+	go func() {
+		_, err := io.Copy(os.Stderr, sh.Stderr)
+		if err != nil {
+			fmt.Fprintln(os.Stderr, err)
+		}
+	}()
 	wg := sync.WaitGroup{}
 
 	wg.Add(1)
@@ -79,7 +90,10 @@ func main() {
 	tm.MoveCursor(1, 1)
 	tm.Println(tm.Color(tm.Bold("** Ctrl-C to exit **"), tm.RED))
 	tm.Flush()
-	io.Copy(sh.Stdin, strings.NewReader(cmd+"\n"))
+	_, err = io.Copy(sh.Stdin, strings.NewReader(cmd+"\n"))
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+	}
 
 	sigs := make(chan os.Signal, 1)
 	signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
@@ -106,14 +120,27 @@ func main() {
 					wg.Done()
 					return
 				}
-				go func() { io.Copy(os.Stdout, sh.Stdout) }()
-				go func() { io.Copy(os.Stderr, sh.Stderr) }()
+				go func() {
+					_, err := io.Copy(os.Stdout, sh.Stdout)
+					if err != nil {
+						fmt.Fprintln(os.Stderr, err)
+					}
+				}()
+				go func() {
+					_, err := io.Copy(os.Stderr, sh.Stderr)
+					if err != nil {
+						fmt.Fprintln(os.Stderr, err)
+					}
+				}()
 
 				tm.Flush()
 				tm.Clear()
 				tm.MoveCursor(1, 1)
 				tm.Println(tm.Color(tm.Bold("Trying to run the command"), tm.GREEN))
-				io.Copy(sh.Stdin, strings.NewReader(cmd+"\n"))
+				_, err = io.Copy(sh.Stdin, strings.NewReader(cmd+"\n"))
+				if err != nil {
+					fmt.Fprintln(os.Stderr, err)
+				}
 			case err, ok := <-watcher.Errors:
 				if !ok {
 					wg.Done()

@@ -49,7 +49,10 @@ func (shell Shell) Close() error {
 	shell.Stderr.Close()
 	shell.Cancel()
 	pgid, _ := syscall.Getpgid(shell.Proc.Process.Pid)
-	syscall.Kill(-pgid, syscall.SIGKILL)
+	err := syscall.Kill(-pgid, syscall.SIGKILL)
+	if err != nil {
+		return err
+	}
 	// shell.Proc.Process.Kill()
 	return shell.Proc.Wait()
 }

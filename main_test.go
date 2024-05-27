@@ -22,7 +22,7 @@ func TestExampleCode(t *testing.T) {
 		t.Error(err)
 	}
 
-	sigs := make(chan os.Signal)
+	sigs := make(chan os.Signal, 2)
 	signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
 MAIN:
 	for {
